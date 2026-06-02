@@ -62,6 +62,24 @@ def count_paragraphs(text):
     count = len(clean_paragraphs)
     return int(count)
 
+
+def count_paragraphs(text):
+    if not text:
+        return 1
+    
+    paragraphs = text.split("\n\n")
+    clean_paragraphs = []
+    
+    count = 0
+    while count < len(paragraphs):
+        if paragraphs[count].strip():
+            clean_paragraphs.append(paragraphs[count])
+        count += 1
+    
+    return int(len(clean_paragraphs))
+
+
+
 def count_sentences(text):
     
     if not text:
