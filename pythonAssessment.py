@@ -1,16 +1,6 @@
 import re
-from docx import Document
 from collections import Counter
 from pathlib import Path
-
-#sample_text = "Lucas goes to school every day of the week. He has many subjects to go to each school day: English, art, science, mathematics, gym, and history. His mother packs a big backpack full of books and lunch for Lucas.His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which Lucas knows means that she thinks he is a good student."
-sample_text = ""
-#f = open("")
-doc_path = Path("newsarticle.docx")
-print(doc_path.suffix)
-word_doc = Document("newsarticle.docx")
-word_text = "\n".join([paragraph.text for paragraph in word_doc.paragraphs])
-#print(word_text)
 
 def count_specific_word(text, word_search):
     
@@ -21,7 +11,6 @@ def count_specific_word(text, word_search):
     matches = re.findall(pattern, text.lower())
     
     count = len(matches)
-    print(f"The word '{word_search}' appears {count} times")
     return count
 
 def identify_most_common_word(text):
@@ -39,10 +28,10 @@ def identify_most_common_word(text):
 
         word = top_word[0]
 
-        print("Most common word:", word)
         return word
     else:
-        print("No words found")
+        return 0
+    
     
      
     
@@ -56,28 +45,26 @@ def calculate_average_word_length(text):
     total_length = sum(len(word) for word in words)
     
     average_length = total_length / len(words)
-    print("Average length is", float(average_length))
-    
     return float(average_length)
 
-def count_paragraph(text):
+def count_paragraphs(text):
     
     if not text:
-        print("No paragraph")
         return 1
+    pattern = "\n\n"
+    paragraphs = text.split(pattern)
     
-    count = 0
-    paragraphs = text.paragraphs
-    while count < len(paragraphs):
-        count += 1
-    
-    print("Paragraphs:", count)
+    clean_paragraphs = []
+    for p in paragraphs:
+        if p.strip():          
+         clean_paragraphs.append(p)
+
+    count = len(clean_paragraphs)
     return int(count)
 
 def count_sentences(text):
     
     if not text:
-        print("No sentences")
         return 1
     
     pattern = r"(?<=[.!?])+"
@@ -88,13 +75,16 @@ def count_sentences(text):
             clean_sentences.append(sentence)
     
     sentence_count = len(clean_sentences)
-    print("Number of sentences:", sentence_count)
     return int(sentence_count)
     
 
 
-identify_most_common_word(word_text)
-calculate_average_word_length(word_text)
-count_paragraph(word_doc)
-count_sentences(sample_text)
-count_specific_word(word_text,"machine")
+if __name__ == "__main__":
+    with open("newsarticle.txt", "r", encoding="utf-8") as f:
+        word_text = f.read()
+        
+    print("Specific word count:", count_specific_word(word_text, "machine"))
+    print("Most common word:", identify_most_common_word(word_text))
+    print("Average word length:", calculate_average_word_length(word_text))
+    print("Paragraph count:", count_paragraphs(word_text))
+    print("Sentence count:", count_sentences(word_text))
